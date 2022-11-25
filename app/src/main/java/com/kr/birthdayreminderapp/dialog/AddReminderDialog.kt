@@ -18,11 +18,12 @@ import com.kr.birthdayreminderapp.databinding.DialogAddDetailsBinding
 import com.kr.birthdayreminderapp.helper.Coroutines
 import com.kr.birthdayreminderapp.helper.Utils
 import com.kr.birthdayreminderapp.presenter.AddReminderPresenter
+import com.kr.birthdayreminderapp.presenter.MainActivityPresenter
 import com.kr.birthdayreminderapp.roomDb.BirthdateModel
 import com.kr.birthdayreminderapp.roomDb.BirthdayDatabase
 import java.util.*
 
-class AddReminderDialog(private var mActivity: Activity,private var db: BirthdayDatabase): BottomSheetDialogFragment(),
+class AddReminderDialog(private var mActivity: Activity,private var db: BirthdayDatabase,private var callBack: MainActivityPresenter): BottomSheetDialogFragment(),
     AddReminderPresenter {
 
     private lateinit var binding: DialogAddDetailsBinding
@@ -63,8 +64,8 @@ class AddReminderDialog(private var mActivity: Activity,private var db: Birthday
         private const val TAG = "fullscreen_dialog"
         private var addReminderDialog: Dialog? = null
 
-        fun display(fragmentManager: FragmentManager,db:BirthdayDatabase,context: Activity){
-            val dialog = AddReminderDialog(context,db)
+        fun display(fragmentManager: FragmentManager,db:BirthdayDatabase,context: Activity,callBack: MainActivityPresenter){
+            val dialog = AddReminderDialog(context,db,callBack)
             dialog.show(fragmentManager, TAG)
         }
     }
@@ -104,7 +105,7 @@ class AddReminderDialog(private var mActivity: Activity,private var db: Birthday
             birthDateData.contactNumber = binding.edtContactNo.text.toString()
             db.birthDateDao().insertBirthDates(birthDateData)
         },{
-            Toast.makeText(mActivity, "Record Inserted Successfully", Toast.LENGTH_SHORT).show()
+            callBack.callbackSuccessfullyRecordStored()
             addReminderDialog?.dismiss()
         })
     }

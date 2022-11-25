@@ -8,4 +8,7 @@
     <string name="submit">Submit</string>
     <string name="save">Save</string>
     <string name="add_reminder_camel_case">Add Reminder</string>
+    <string name="birthdate_format">Birthdate: %S</string>
+    <string name="contact_no_format">Contact No: %S</string>
+    <string name="email_format">Email: %S</string>
 </resources>

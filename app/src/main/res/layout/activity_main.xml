@@ -8,6 +8,10 @@
         <variable
             name="presenter"
             type="com.kr.birthdayreminderapp.presenter.MainActivityPresenter" />
+
+        <variable
+            name="adapter"
+            type="com.kr.birthdayreminderapp.adapter.BirthdateAdapter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,7 +31,23 @@
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/containerBottomAppBar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvBirthDateRecord"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:clipToPadding="false"
+                app:adapter="@{adapter}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toTopOf="@id/containerBottomAppBar"
+                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                tools:itemCount="5"
+                tools:listitem="@layout/item_birthdate_record" />
 
             <com.google.android.material.bottomappbar.BottomAppBar
                 android:id="@+id/bottomAppBar"
@@ -35,6 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                app:hideOnScroll="true"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -48,5 +69,6 @@
                 app:srcCompat="@drawable/ic_add"
                 app:tint="@color/colorWhite" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
