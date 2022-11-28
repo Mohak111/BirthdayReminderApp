@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -17,18 +16,20 @@ import com.kr.birthdayreminderapp.R
 import com.kr.birthdayreminderapp.databinding.DialogAddDetailsBinding
 import com.kr.birthdayreminderapp.helper.Coroutines
 import com.kr.birthdayreminderapp.helper.Utils
+import com.kr.birthdayreminderapp.helper.Validation
 import com.kr.birthdayreminderapp.presenter.AddReminderPresenter
 import com.kr.birthdayreminderapp.presenter.MainActivityPresenter
 import com.kr.birthdayreminderapp.roomDb.BirthdateModel
 import com.kr.birthdayreminderapp.roomDb.BirthdayDatabase
 import java.util.*
 
-class AddReminderDialog(private var mActivity: Activity,private var db: BirthdayDatabase,private var callBack: MainActivityPresenter): BottomSheetDialogFragment(),
+class AddReminderDialog(private var mActivity: Activity,private var db: BirthdayDatabase,private var callBack: MainActivityPresenter,private var data: BirthdateModel,private var isUpdate: Boolean): BottomSheetDialogFragment(),
     AddReminderPresenter {
 
     private lateinit var binding: DialogAddDetailsBinding
     private var selectedBirthdate: String = ""
     private var scheduleTime: Long = 0L
+    private var recordId = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_add_details,container,false)
@@ -58,15 +59,10 @@ class AddReminderDialog(private var mActivity: Activity,private var db: Birthday
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.presenter = this
-    }
-
-    companion object{
-        private const val TAG = "fullscreen_dialog"
-        private var addReminderDialog: Dialog? = null
-
-        fun display(fragmentManager: FragmentManager,db:BirthdayDatabase,context: Activity,callBack: MainActivityPresenter){
-            val dialog = AddReminderDialog(context,db,callBack)
-            dialog.show(fragmentManager, TAG)
+        binding.data = data
+        if(isUpdate){
+            recordId = data.id
+            binding.btnSave.text = getString(R.string.update)
         }
     }
 
@@ -96,17 +92,46 @@ class AddReminderDialog(private var mActivity: Activity,private var db: Birthday
     }
 
     override fun onSaveClicked() {
-        Coroutines.ioThenMain({
-            val birthDateData = BirthdateModel()
-            birthDateData.userName = binding.edtName.text.toString()
-            birthDateData.birthDate = selectedBirthdate
-            birthDateData.scheduleTime = scheduleTime
-            birthDateData.email = binding.edtEmailId.text.toString()
-            birthDateData.contactNumber = binding.edtContactNo.text.toString()
-            db.birthDateDao().insertBirthDates(birthDateData)
-        },{
-            callBack.callbackSuccessfullyRecordStored()
-            addReminderDialog?.dismiss()
-        })
+        if(Validation.checkRecords(mActivity,binding.edtName.text.toString(),selectedBirthdate)) {
+            if (!isUpdate) {
+                Coroutines.ioThenMain({
+                    val birthDateData = BirthdateModel()
+                    birthDateData.userName = binding.edtName.text.toString().trim()
+                    birthDateData.birthDate = selectedBirthdate
+                    birthDateData.scheduleTime = scheduleTime
+                    birthDateData.email = binding.edtEmailId.text.toString().trim()
+                    birthDateData.contactNumber = binding.edtContactNo.text.toString().trim()
+                    db.birthDateDao().insertBirthDates(birthDateData)
+                }, {
+                    callBack.callbackSuccessfullyRecordStored()
+                    addReminderDialog?.dismiss()
+                })
+            } else {
+                Coroutines.ioThenMain({
+                    db.birthDateDao().updateRecord(
+                        recordId,
+                        binding.edtName.text.toString().trim(),
+                        selectedBirthdate,
+                        binding.edtContactNo.text.toString().trim(),
+                        binding.edtEmailId.text.toString().trim(),
+                        scheduleTime
+                    )
+                }, {
+                    callBack.callbackSuccessfullyRecordStored()
+                    addReminderDialog?.dismiss()
+                })
+            }
+        }
     }
+
+    companion object{
+        private const val TAG = "fullscreen_dialog"
+        private var addReminderDialog: Dialog? = null
+
+        fun display(fragmentManager: FragmentManager,db:BirthdayDatabase,context: Activity,callBack: MainActivityPresenter,data: BirthdateModel,isUpdate: Boolean){
+            val dialog = AddReminderDialog(context,db,callBack,data,isUpdate)
+            dialog.show(fragmentManager, TAG)
+        }
+    }
+
 }

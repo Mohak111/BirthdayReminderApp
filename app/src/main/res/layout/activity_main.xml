@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="presenter"
             type="com.kr.birthdayreminderapp.presenter.MainActivityPresenter" />
@@ -12,6 +14,10 @@
         <variable
             name="adapter"
             type="com.kr.birthdayreminderapp.adapter.BirthdateAdapter" />
+
+        <variable
+            name="isListSizeZero"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,6 +48,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:clipToPadding="false"
+                android:visibility="@{isListSizeZero ? View.GONE: View.VISIBLE}"
                 app:adapter="@{adapter}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toTopOf="@id/containerBottomAppBar"
@@ -69,6 +76,20 @@
                 app:srcCompat="@drawable/ic_add"
                 app:tint="@color/colorWhite" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <TextView
+            android:id="@+id/lblNoDataFound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_data_found"
+            android:textColor="@color/colorBlack"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="@{!isListSizeZero ? View.GONE: View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

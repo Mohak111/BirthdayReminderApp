@@ -4,9 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.kr.birthdayreminderapp.databinding.ItemBirthdateRecordBinding
+import com.kr.birthdayreminderapp.presenter.MainActivityPresenter
 import com.kr.birthdayreminderapp.roomDb.BirthdateModel
 
-class BirthdateAdapter(private var list: MutableList<BirthdateModel>):RecyclerView.Adapter<BirthdateAdapter.BirthDateViewHolder>() {
+class BirthdateAdapter(private var list: MutableList<BirthdateModel>,private var presenter: MainActivityPresenter):RecyclerView.Adapter<BirthdateAdapter.BirthDateViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BirthDateViewHolder {
         val binding: ItemBirthdateRecordBinding = ItemBirthdateRecordBinding.inflate(LayoutInflater.from(parent.context),parent,false)
@@ -26,6 +27,7 @@ class BirthdateAdapter(private var list: MutableList<BirthdateModel>):RecyclerVi
         fun bind(data: BirthdateModel) {
             with(itemBinding) {
                 this.data = data
+                this.presenter = this@BirthdateAdapter.presenter
                 executePendingBindings()
             }
         }

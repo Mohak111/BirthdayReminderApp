@@ -7,6 +7,10 @@
         <variable
             name="presenter"
             type="com.kr.birthdayreminderapp.presenter.AddReminderPresenter" />
+
+        <variable
+            name="data"
+            type="com.kr.birthdayreminderapp.roomDb.BirthdateModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,7 +61,8 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/name"
                         android:imeOptions="actionNext"
-                        android:inputType="textPersonName" />
+                        android:inputType="textPersonName"
+                        android:text="@{data.userName}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -83,7 +88,8 @@
                         android:imeOptions="actionNext"
                         android:inputType="date"
                         android:longClickable="false"
-                        android:onClick="@{()->presenter.onBirthDateSelectionClicked()}" />
+                        android:onClick="@{()->presenter.onBirthDateSelectionClicked()}"
+                        android:text="@{data.birthDate}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -106,7 +112,8 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/contact_no"
                         android:imeOptions="actionNext"
-                        android:inputType="phone" />
+                        android:inputType="phone"
+                        android:text="@{data.contactNumber}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -129,7 +136,8 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/email_id"
                         android:imeOptions="actionDone"
-                        android:inputType="textEmailAddress" />
+                        android:inputType="textEmailAddress"
+                        android:text="@{data.email}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton

@@ -25,4 +25,7 @@ open class BirthdateModel: Serializable {
 
     @ColumnInfo(name = "scheduleTime")
     var scheduleTime: Long = 0L
+
+    @ColumnInfo(name = "recordDeleted")
+    var recordDeleted = 0
 }

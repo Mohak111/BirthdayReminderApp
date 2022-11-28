@@ -11,4 +11,6 @@
     <string name="birthdate_format">Birthdate: %S</string>
     <string name="contact_no_format">Contact No: %S</string>
     <string name="email_format">Email: %S</string>
+    <string name="update">update</string>
+    <string name="no_data_found">No Data Found</string>
 </resources>
